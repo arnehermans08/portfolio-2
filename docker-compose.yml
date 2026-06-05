@@ -1,0 +1,44 @@
+services:
+  mongodb:
+    image: mongo:6
+    container_name: portfolio_db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d
+      - mongo_data:/data/db
+    networks:
+      - portfolio_net
+
+  backend:
+    build: ./backend
+    container_name: portfolio_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/portfolio
+      - PORT=5000
+    depends_on:
+      - mongodb
+    networks:
+      - portfolio_net
+
+  frontend:
+    build: ./frontend
+    container_name: portfolio_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - portfolio_net
+
+networks:
+  portfolio_net:
+    driver: bridge
+
+volumes:
+  mongo_data:
