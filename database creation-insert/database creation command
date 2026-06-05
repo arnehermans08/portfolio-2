@@ -1,7 +1,7 @@
 
 
 
-docker exec -it portfolio_db mongosh
+docker exec - it portfolio_db mongosh
 
 use portfolio
 
@@ -9,25 +9,27 @@ db.createCollection('skills')
 
 db.createCollection('projects')
 
+db.createCollection('contacts')
+
 
 
 // Skills invoegen
 db.skills.insertMany([
-    {naam: 'JavaScript', level: 85, category: 'Frontend'},
-    {naam: 'HTML5/CSS3', level: 90, category: 'Frontend'},
-    {naam: 'Node.js', level: 70, category: 'Backend'},
-    {naam: 'Python', level: 65, category: 'Backend'},
-    {naam: 'MongoDB', level: 60, category: 'Database'},
-    {naam: 'Git & GitHub', level: 80, category: 'Tools'},
-    {naam: 'Docker', level: 55, category: 'DevOps'}
+    { naam: 'JavaScript', level: 85, category: 'Frontend' },
+    { naam: 'HTML5/CSS3', level: 90, category: 'Frontend' },
+    { naam: 'Node.js', level: 70, category: 'Backend' },
+    { naam: 'Python', level: 65, category: 'Backend' },
+    { naam: 'MongoDB', level: 60, category: 'Database' },
+    { naam: 'Git & GitHub', level: 80, category: 'Tools' },
+    { naam: 'Docker', level: 55, category: 'DevOps' }
 ]);
 
 // Projecten invoegen
 db.projects.insertMany([
-    {titel: 'Portfolio Website', beschrijving: 'Mijn persoonlijke portfolio website met skills en projecten. Skills worden geladen vanuit MongoDB database via API.', tags: ['HTML5', 'CSS3', 'JavaScript', 'Docker', 'MongoDB']},
-    {titel: 'Snake Game', beschrijving: 'Klassieke Snake game gemaakt met Python. Bestuur de slang, eet voedsel en word langer!', tags: ['Python', 'Game Development', 'OOP']},
-    {titel: 'Todo App', beschrijving: 'Takenlijst applicatie met localStorage. Taken toevoegen, afvinken en verwijderen.', tags: ['JavaScript', 'HTML5', 'CSS3', 'LocalStorage']},
-    {titel: 'Weer App', beschrijving: 'Real-time weerapplicatie met weather API. Toont huidig weer en 5-daagse forecast.', tags: ['API','CSS Modules']},
-    {titel: 'Mastermind Game', beschrijving: 'Interactieve Mastermind codebreek spel. Raad de geheime code van 4 gekleurde pinnen!', tags: ['JavaScript', 'HTML5', 'CSS3', 'Game Development']},
-    {titel: 'Vanderlande ESP32 Dashboard', beschrijving: 'Real-time sensor monitoring voor sorteerbanden. 7 ESP32\'s sturen data via ESP-NOW naar dashboard met track visualisatie en kleurcodering.', tags: ['ESP32', 'ESP-NOW', 'Node.js', 'MongoDB', 'Docker', 'Chart.js']}
+    { titel: 'Portfolio Website', beschrijving: 'Mijn persoonlijke portfolio website met skills en projecten. Skills worden geladen vanuit MongoDB database via API.', tags: ['HTML5', 'CSS3', 'JavaScript', 'Docker', 'MongoDB'] },
+    { titel: 'Snake Game', beschrijving: 'Klassieke Snake game gemaakt met Python. Bestuur de slang, eet voedsel en word langer!', tags: ['Python', 'Game Development', 'OOP'] },
+    { titel: 'Todo App', beschrijving: 'Takenlijst applicatie met localStorage. Taken toevoegen, afvinken en verwijderen.', tags: ['JavaScript', 'HTML5', 'CSS3', 'LocalStorage'] },
+    { titel: 'Weer App', beschrijving: 'Real-time weerapplicatie met weather API. Toont huidig weer en 5-daagse forecast.', tags: ['API', 'CSS Modules'] },
+    { titel: 'Mastermind Game', beschrijving: 'Interactieve Mastermind codebreek spel. Raad de geheime code van 4 gekleurde pinnen!', tags: ['JavaScript', 'HTML5', 'CSS3', 'Game Development'] },
+    { titel: 'Vanderlande ESP32 Dashboard', beschrijving: 'Real-time sensor monitoring voor sorteerbanden. 7 ESP32\'s sturen data via ESP-NOW naar dashboard met track visualisatie en kleurcodering.', tags: ['ESP32', 'ESP-NOW', 'Node.js', 'MongoDB', 'Docker', 'Chart.js'] }
 ]);
