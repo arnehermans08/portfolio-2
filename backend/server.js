@@ -1,38 +1,67 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
 
-// Importeer routes
-const skillsRoutes = require('./routes/skills');
-const projectsRoutes = require('./routes/projects');
-const contactRoutes = require('./routes/contact');
+// Models
+const Skill = require('./models/Skill');
+const Project = require('./models/Project');
 
 const app = express();
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
 // MongoDB connectie
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://mongodb:27017/portfolio';
+mongoose.connect('mongodb://mongodb:27017/portfolio', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('✅ MongoDB verbonden!'))
-  .catch(err => console.error('❌ MongoDB fout:', err));
+const db = mongoose.connection;
+db.once('open', () => console.log('✅ MongoDB verbonden!'));
 
-// Routes
-app.use('/api/skills', skillsRoutes);
-app.use('/api/projects', projectsRoutes);
-app.use('/api/contact', contactRoutes);
+// ========== API ROUTES ==========
 
 // Test endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Server draait!' });
+app.get('/api', (req, res) => {
+    res.json({ message: 'Hallo vanaf de backend!' });
+});
+
+// GET alle skills
+app.get('/api/skills', async (req, res) => {
+    try {
+        const skills = await Skill.find();
+        console.log(`📊 ${skills.length} skills opgehaald`);
+        res.json(skills);
+    } catch (error) {
+        console.error('Fout:', error);
+        res.status(500).json({ message: 'Fout bij ophalen skills' });
+    }
+});
+
+// GET alle projecten
+app.get('/api/projects', async (req, res) => {
+    try {
+        const projects = await Project.find();
+        console.log(`📁 ${projects.length} projecten opgehaald`);
+        res.json(projects);
+    } catch (error) {
+        console.error('Fout:', error);
+        res.status(500).json({ message: 'Fout bij ophalen projecten' });
+    }
+});
+
+// POST contact
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { naam, email, bericht } = req.body;
+        console.log(`📧 Contact: ${naam} (${email}): ${bericht}`);
+        res.json({ success: true, message: 'Bericht ontvangen!' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Fout bij verzenden' });
+    }
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server draait op poort ${PORT}`);
+app.listen(5000, () => {
+    console.log('🚀 Server op poort 5000');
 });

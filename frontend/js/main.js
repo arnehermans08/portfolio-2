@@ -1,4 +1,4 @@
-// ========== MOBILE MENU CLASS ==========
+// ========== MOBILE MENU ==========
 class MobileMenu {
     constructor() {
         this.hamburger = document.querySelector(".hamburger");
@@ -6,15 +6,11 @@ class MobileMenu {
         this.navLinks = document.querySelectorAll(".nav-link");
 
         if (this.hamburger) {
-            this.initEvents();
+            this.hamburger.addEventListener("click", () => this.toggleMenu());
+            this.navLinks.forEach(link =>
+                link.addEventListener("click", () => this.closeMenu())
+            );
         }
-    }
-
-    initEvents() {
-        this.hamburger.addEventListener("click", () => this.toggleMenu());
-        this.navLinks.forEach(link =>
-            link.addEventListener("click", () => this.closeMenu())
-        );
     }
 
     toggleMenu() {
@@ -28,39 +24,41 @@ class MobileMenu {
     }
 }
 
-// ========== SKILLS CLASS (data uit database) ==========
+// ========== SKILLS ==========
 class Skills {
     constructor() {
         this.container = document.getElementById('skills-container');
-        this.apiUrl = '/api/skills';
+        // DIRECTE BACKEND URL - NIET via proxy
+        this.apiUrl = 'http://localhost:5000/api/skills';
     }
 
     async loadSkills() {
         try {
+            console.log('Ophalen van:', this.apiUrl);
             const response = await fetch(this.apiUrl);
             const skills = await response.json();
+            console.log('Skills geladen:', skills.length);
             this.renderSkills(skills);
-            this.animateProgressBars();
         } catch (error) {
-            console.error('Fout bij laden skills:', error);
-            this.container.innerHTML = '<div class="loading"><p>❌ Fout bij laden skills</p></div>';
+            console.error('Fout:', error);
+            this.container.innerHTML = '<div class="loading"><p>❌ Kan backend niet bereiken op poort 5000</p></div>';
         }
     }
 
     renderSkills(skills) {
+        if (!this.container) return;
         if (!skills || skills.length === 0) {
             this.container.innerHTML = '<div class="loading"><p>Geen skills gevonden</p></div>';
             return;
         }
 
         this.container.innerHTML = '';
-        skills.forEach((skill, index) => {
-            const skillCard = document.createElement('div');
-            skillCard.className = 'skill-card';
-            skillCard.setAttribute('data-index', index);
-            skillCard.innerHTML = `
+        skills.forEach(skill => {
+            const card = document.createElement('div');
+            card.className = 'skill-card';
+            card.innerHTML = `
                 <div class="skill-header">
-                    <div class="skill-icon">${skill.icon || '💻'}</div>
+                    <div class="skill-icon">💻</div>
                     <h3 class="skill-name">${skill.naam}</h3>
                 </div>
                 <div class="skill-category">${skill.category || 'Algemeen'}</div>
@@ -69,65 +67,58 @@ class Skills {
                 </div>
                 <div class="skill-percentage">${skill.level}%</div>
             `;
-            this.container.appendChild(skillCard);
+            this.container.appendChild(card);
         });
-    }
-
-    animateProgressBars() {
-        const progressBars = document.querySelectorAll('.progress-fill');
-        progressBars.forEach(bar => {
-            const percentage = bar.getAttribute('data-percentage');
-            setTimeout(() => {
-                bar.style.width = percentage + '%';
-            }, 200);
-        });
+        
+        setTimeout(() => {
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-percentage') + '%';
+            });
+        }, 100);
     }
 }
 
-// ========== PROJECTS CLASS (data uit database) ==========
+// ========== PROJECTEN ==========
 class Projects {
     constructor() {
         this.container = document.getElementById('projects-container');
-        this.apiUrl = '/api/projects';
+        // DIRECTE BACKEND URL - NIET via proxy
+        this.apiUrl = 'http://localhost:5000/api/projects';
     }
 
     async loadProjects() {
         try {
+            console.log('Ophalen van:', this.apiUrl);
             const response = await fetch(this.apiUrl);
             const projects = await response.json();
+            console.log('Projecten geladen:', projects.length);
             this.renderProjects(projects);
         } catch (error) {
-            console.error('Fout bij laden projecten:', error);
-            this.container.innerHTML = '<div class="loading"><p>❌ Fout bij laden projecten</p></div>';
+            console.error('Fout:', error);
+            this.container.innerHTML = '<div class="loading"><p>❌ Kan backend niet bereiken op poort 5000</p></div>';
         }
     }
 
     renderProjects(projects) {
+        if (!this.container) return;
         if (!projects || projects.length === 0) {
             this.container.innerHTML = '<div class="loading"><p>Geen projecten gevonden</p></div>';
             return;
         }
 
         this.container.innerHTML = '';
-        projects.forEach((project, index) => {
-            const projectCard = document.createElement('div');
-            projectCard.className = 'project-card';
-            projectCard.setAttribute('data-index', index);
-            
-            // Placeholder afbeelding styling
-            const imageHtml = project.afbeelding ? 
-                `<img src="${project.afbeelding}" alt="${project.titel}" style="width:100%; height:100%; object-fit:cover;">` :
-                `<div class="project-image-placeholder">🖼️</div>`;
-            
-            projectCard.innerHTML = `
+        projects.forEach(project => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.innerHTML = `
                 <div class="project-image">
-                    ${imageHtml}
+                    <div class="project-image-placeholder">📁</div>
                 </div>
                 <div class="project-info">
                     <h3 class="project-title">${project.titel}</h3>
                     <p class="project-description">${project.beschrijving}</p>
                     <div class="project-tags">
-                        ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
+                        ${(project.tags || []).map(tag => `<span class="project-tag">${tag}</span>`).join('')}
                     </div>
                     <div class="project-links">
                         ${project.githubUrl ? `<a href="${project.githubUrl}" target="_blank" class="project-link">GitHub →</a>` : ''}
@@ -135,20 +126,16 @@ class Projects {
                     </div>
                 </div>
             `;
-            this.container.appendChild(projectCard);
+            this.container.appendChild(card);
         });
     }
 }
 
-// ========== CONTACT FORM CLASS (extra API) ==========
+// ========== CONTACT FORM ==========
 class ContactForm {
     constructor() {
         this.form = document.getElementById('contact-form');
         this.messageDiv = document.getElementById('form-message');
-        this.init();
-    }
-
-    init() {
         if (this.form) {
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         }
@@ -161,16 +148,8 @@ class ContactForm {
         const email = document.getElementById('email').value;
         const bericht = document.getElementById('bericht').value;
 
-        // Validatie
         if (!naam || !email || !bericht) {
             this.showMessage('Vul alle velden in!', 'error');
-            return;
-        }
-
-        // Email validatie
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            this.showMessage('Vul een geldig emailadres in!', 'error');
             return;
         }
 
@@ -179,7 +158,7 @@ class ContactForm {
         submitBtn.textContent = 'Verzenden...';
 
         try {
-            const response = await fetch('/api/contact', {
+            const response = await fetch('http://localhost:5000/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ naam, email, bericht })
@@ -188,14 +167,13 @@ class ContactForm {
             const data = await response.json();
             
             if (data.success) {
-                this.showMessage('Bericht succesvol verzonden! Ik neem snel contact op.', 'success');
+                this.showMessage('Bericht succesvol verzonden!', 'success');
                 this.form.reset();
             } else {
                 this.showMessage(data.message || 'Er is een fout opgetreden.', 'error');
             }
         } catch (error) {
-            console.error('Fout:', error);
-            this.showMessage('Kon bericht niet verzenden. Probeer later opnieuw.', 'error');
+            this.showMessage('Kon bericht niet verzenden.', 'error');
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Verstuur bericht';
@@ -205,7 +183,6 @@ class ContactForm {
     showMessage(message, type) {
         this.messageDiv.textContent = message;
         this.messageDiv.className = `form-message ${type}`;
-        
         setTimeout(() => {
             this.messageDiv.textContent = '';
             this.messageDiv.className = 'form-message';
@@ -213,112 +190,16 @@ class ContactForm {
     }
 }
 
-// ========== SCROLL ANIMATIONS (fade in bij scrollen) ==========
-class ScrollAnimations {
-    constructor() {
-        this.elements = document.querySelectorAll('.skill-card, .project-card, .fade-in');
-        this.init();
-    }
-
-    init() {
-        this.checkVisibility();
-        window.addEventListener('scroll', () => this.checkVisibility());
-    }
-
-    checkVisibility() {
-        this.elements.forEach(element => {
-            const rect = element.getBoundingClientRect();
-            const isVisible = rect.top < window.innerHeight - 100;
-            
-            if (isVisible && !element.classList.contains('visible')) {
-                if (element.classList.contains('skill-card') || element.classList.contains('project-card')) {
-                    element.classList.add('visible');
-                } else {
-                    element.style.opacity = '1';
-                }
-            }
-        });
-    }
-}
-
-// ========== ACTIVE NAV LINK ON SCROLL ==========
-class ActiveNavLink {
-    constructor() {
-        this.sections = document.querySelectorAll('section');
-        this.navLinks = document.querySelectorAll('.nav-link');
-        this.init();
-    }
-
-    init() {
-        window.addEventListener('scroll', () => this.updateActiveLink());
-    }
-
-    updateActiveLink() {
-        let current = '';
-        const scrollPosition = window.scrollY + 100;
-
-        this.sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        this.navLinks.forEach(link => {
-            link.classList.remove('active');
-            const href = link.getAttribute('href').substring(1);
-            if (href === current) {
-                link.classList.add('active');
-            }
-        });
-    }
-}
-
-// ========== NAVBAR SCROLL EFFECT ==========
-class NavbarScroll {
-    constructor() {
-        this.navbar = document.querySelector('.navbar');
-        this.init();
-    }
-
-    init() {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                this.navbar.classList.add('scrolled');
-            } else {
-                this.navbar.classList.remove('scrolled');
-            }
-        });
-    }
-}
-
-// ========== FOOTER YEAR ==========
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// ========== INITIALISATIE ALLES ==========
+// ========== INITIALISATIE ==========
 window.addEventListener('DOMContentLoaded', async () => {
-    // Mobile menu
+    console.log('Website gestart');
     new MobileMenu();
     
-    // Skills uit database laden
     const skills = new Skills();
     await skills.loadSkills();
     
-    // Projecten uit database laden
     const projects = new Projects();
     await projects.loadProjects();
     
-    // Contact form
     new ContactForm();
-    
-    // Scroll animaties
-    new ScrollAnimations();
-    
-    // Active nav link
-    new ActiveNavLink();
-    
-    // Navbar scroll effect
-    new NavbarScroll();
 });
