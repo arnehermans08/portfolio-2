@@ -41,7 +41,7 @@ class Skills {
             this.renderSkills(skills);
         } catch (error) {
             console.error('Fout:', error);
-            this.container.innerHTML = '<div class="loading"><p>❌ Kan backend niet bereiken op poort 5000</p></div>';
+            this.container.innerHTML = '<div class="loading"><p> Kan backend niet bereiken op poort 5000</p></div>';
         }
     }
 
@@ -69,7 +69,7 @@ class Skills {
             `;
             this.container.appendChild(card);
         });
-        
+
         setTimeout(() => {
             document.querySelectorAll('.progress-fill').forEach(bar => {
                 bar.style.width = bar.getAttribute('data-percentage') + '%';
@@ -95,7 +95,7 @@ class Projects {
             this.renderProjects(projects);
         } catch (error) {
             console.error('Fout:', error);
-            this.container.innerHTML = '<div class="loading"><p>❌ Kan backend niet bereiken op poort 5000</p></div>';
+            this.container.innerHTML = '<div class="loading"><p> Kan backend niet bereiken op poort 5000</p></div>';
         }
     }
 
@@ -112,17 +112,13 @@ class Projects {
             card.className = 'project-card';
             card.innerHTML = `
                 <div class="project-image">
-                    <div class="project-image-placeholder">📁</div>
+                    <div class="project-image-placeholder"></div>
                 </div>
                 <div class="project-info">
                     <h3 class="project-title">${project.titel}</h3>
                     <p class="project-description">${project.beschrijving}</p>
                     <div class="project-tags">
                         ${(project.tags || []).map(tag => `<span class="project-tag">${tag}</span>`).join('')}
-                    </div>
-                    <div class="project-links">
-                        ${project.githubUrl ? `<a href="${project.githubUrl}" target="_blank" class="project-link">GitHub →</a>` : ''}
-                        ${project.liveUrl ? `<a href="${project.liveUrl}" target="_blank" class="project-link">Live Demo →</a>` : ''}
                     </div>
                 </div>
             `;
@@ -143,7 +139,7 @@ class ContactForm {
 
     async handleSubmit(e) {
         e.preventDefault();
-        
+
         let naam = document.getElementById('naam').value;
         let email = document.getElementById('email').value;
         let bericht = document.getElementById('bericht').value;
@@ -163,9 +159,9 @@ class ContactForm {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ naam, email, bericht })
             });
-            
+
             let data = await response.json();
-            
+
             if (data.success) {
                 this.showMessage('Bericht succesvol verzonden!', 'success');
                 this.form.reset();
@@ -194,12 +190,12 @@ class ContactForm {
 window.addEventListener('DOMContentLoaded', async () => {
     console.log('Website gestart');
     new MobileMenu();
-    
+
     let skills = new Skills();
     await skills.loadSkills();
-    
+
     let projects = new Projects();
     await projects.loadProjects();
-    
+
     new ContactForm();
 });

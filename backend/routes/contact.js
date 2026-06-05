@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
         let nieuwBericht = new Contact({ naam, email, bericht });
         await nieuwBericht.save();
         
-        console.log(`💾 Opgeslagen: ${naam} - ${email}`);
+        console.log(` Opgeslagen: ${naam} - ${email}`);
         
         res.json({ success: true, message: 'Bericht verzonden!' });
         

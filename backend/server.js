@@ -26,7 +26,7 @@ mongoose.connect('mongodb://mongodb:27017/portfolio', {
 });
 
 let db = mongoose.connection;
-db.once('open', () => console.log('✅ MongoDB verbonden!'));
+db.once('open', () => console.log(' MongoDB verbonden!'));
 
 // ========== API ROUTES ==========
 
@@ -39,7 +39,7 @@ app.get('/api', (req, res) => {
 app.get('/api/skills', async (req, res) => {
     try {
         let skills = await Skill.find();
-        console.log(`📊 ${skills.length} skills opgehaald`);
+        console.log(` ${skills.length} skills opgehaald`);
         res.json(skills);
     } catch (error) {
         console.error('Fout:', error);
@@ -51,7 +51,7 @@ app.get('/api/skills', async (req, res) => {
 app.get('/api/projects', async (req, res) => {
     try {
         let projects = await Project.find();
-        console.log(`📁 ${projects.length} projecten opgehaald`);
+        console.log(` ${projects.length} projecten opgehaald`);
         res.json(projects);
     } catch (error) {
         console.error('Fout:', error);
@@ -63,13 +63,13 @@ app.get('/api/projects', async (req, res) => {
 app.post('/api/contact', async (req, res) => {
     try {
         let { naam, email, bericht } = req.body;
-        console.log(`📧 Contact ontvangen: ${naam} (${email})`);
+        console.log(` Contact ontvangen: ${naam} (${email})`);
         
-        // 💾 Opslaan in database
+        //  Opslaan in database
         let nieuwBericht = new Contact({ naam, email, bericht });
         await nieuwBericht.save();
         
-        console.log(`✅ Opgeslagen in database! ID: ${nieuwBericht._id}`);
+        console.log(` Opgeslagen in database! ID: ${nieuwBericht._id}`);
         res.json({ success: true, message: 'Bericht ontvangen en opgeslagen!' });
         
     } catch (error) {
@@ -80,5 +80,5 @@ app.post('/api/contact', async (req, res) => {
 
 // Start server
 app.listen(5000, () => {
-    console.log('🚀 Server op poort 5000');
+    console.log(' Server op poort 5000');
 });
