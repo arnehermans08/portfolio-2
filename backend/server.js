@@ -1,12 +1,21 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+let express = require('express');
+let mongoose = require('mongoose');
+let cors = require('cors');
 
 // Models
-const Skill = require('./models/Skill');
-const Project = require('./models/Project');
+let Skill = require('./models/Skill');
+let Project = require('./models/Project');
 
-const app = express();
+// Contact model (toegevoegd)
+let ContactSchema = new mongoose.Schema({
+    naam: String,
+    email: String,
+    bericht: String,
+    datum: { type: Date, default: Date.now }
+});
+let Contact = mongoose.model('Contact', ContactSchema);
+
+let app = express();
 app.use(cors());
 app.use(express.json());
 
@@ -16,7 +25,7 @@ mongoose.connect('mongodb://mongodb:27017/portfolio', {
     useUnifiedTopology: true,
 });
 
-const db = mongoose.connection;
+let db = mongoose.connection;
 db.once('open', () => console.log('✅ MongoDB verbonden!'));
 
 // ========== API ROUTES ==========
@@ -29,7 +38,7 @@ app.get('/api', (req, res) => {
 // GET alle skills
 app.get('/api/skills', async (req, res) => {
     try {
-        const skills = await Skill.find();
+        let skills = await Skill.find();
         console.log(`📊 ${skills.length} skills opgehaald`);
         res.json(skills);
     } catch (error) {
@@ -41,7 +50,7 @@ app.get('/api/skills', async (req, res) => {
 // GET alle projecten
 app.get('/api/projects', async (req, res) => {
     try {
-        const projects = await Project.find();
+        let projects = await Project.find();
         console.log(`📁 ${projects.length} projecten opgehaald`);
         res.json(projects);
     } catch (error) {
@@ -50,13 +59,21 @@ app.get('/api/projects', async (req, res) => {
     }
 });
 
-// POST contact
+// POST contact - OPSLAAN IN DATABASE
 app.post('/api/contact', async (req, res) => {
     try {
-        const { naam, email, bericht } = req.body;
-        console.log(`📧 Contact: ${naam} (${email}): ${bericht}`);
-        res.json({ success: true, message: 'Bericht ontvangen!' });
+        let { naam, email, bericht } = req.body;
+        console.log(`📧 Contact ontvangen: ${naam} (${email})`);
+        
+        // 💾 Opslaan in database
+        let nieuwBericht = new Contact({ naam, email, bericht });
+        await nieuwBericht.save();
+        
+        console.log(`✅ Opgeslagen in database! ID: ${nieuwBericht._id}`);
+        res.json({ success: true, message: 'Bericht ontvangen en opgeslagen!' });
+        
     } catch (error) {
+        console.error('Fout:', error);
         res.status(500).json({ success: false, message: 'Fout bij verzenden' });
     }
 });

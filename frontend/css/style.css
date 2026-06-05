@@ -58,7 +58,8 @@ body {
     text-decoration: none;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover,
+.nav-link.active {
     color: white;
 }
 
@@ -91,7 +92,95 @@ body {
     margin: 0 auto 30px;
 }
 
-.btn-primary, .btn-secondary {
+/* ========== OVER MIJ SECTIE - VERBETERD ========== */
+.about {
+    background-color: #000000;
+    padding: 80px 0;
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-text {
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-radius: 16px;
+    padding: 48px;
+    transition: all 0.3s ease;
+}
+
+.about-text:hover {
+    border-color: #3b82f6;
+    transform: translateY(-4px);
+}
+
+.about-text p {
+    color: #cccccc;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+}
+
+.about-text p:last-of-type {
+    margin-bottom: 0;
+}
+
+.about-text strong {
+    color: #3b82f6;
+    font-weight: 600;
+}
+
+/* Stats stijlen */
+.about-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.stat {
+    text-align: center;
+    flex: 1;
+}
+
+.stat-number {
+    display: block;
+    font-size: 42px;
+    font-weight: 700;
+    color: #3b82f6;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #888888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .about-text {
+        padding: 32px;
+    }
+
+    .about-stats {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .stat-number {
+        font-size: 32px;
+    }
+}
+
+.btn-primary,
+.btn-secondary {
     display: inline-block;
     padding: 12px 28px;
     border-radius: 40px;
@@ -335,7 +424,9 @@ body {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Responsive */
@@ -343,12 +434,16 @@ body {
     .nav-menu {
         display: none;
     }
+
     .hero-title {
         font-size: 36px;
     }
-    .skills-grid, .projects-grid {
+
+    .skills-grid,
+    .projects-grid {
         grid-template-columns: 1fr;
     }
+
     .contact-wrapper {
         grid-template-columns: 1fr;
     }
