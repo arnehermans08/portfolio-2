@@ -26,7 +26,7 @@ class MobileMenu {
 
 // ========== SKILLS ==========
 class Skills {
-    constructor() {
+    letructor() {
         this.container = document.getElementById('skills-container');
         this.apiUrl = 'http://localhost:5000/api/skills';
     }
@@ -39,8 +39,8 @@ class Skills {
 
         try {
             console.log('Skills ophalen van:', this.apiUrl);
-            const response = await fetch(this.apiUrl);
-            const skills = await response.json();
+            let response = await fetch(this.apiUrl);
+            let skills = await response.json();
             console.log('Skills geladen:', skills.length);
             this.renderSkills(skills);
         } catch (error) {
@@ -57,7 +57,7 @@ class Skills {
 
         this.container.innerHTML = '';
         skills.forEach(skill => {
-            const card = document.createElement('div');
+            let card = document.createElement('div');
             card.className = 'skill-card';
             card.innerHTML = `
                 <div class="skill-header">
@@ -83,7 +83,7 @@ class Skills {
 
 // ========== PROJECTEN ==========
 class Projects {
-    constructor() {
+    letructor() {
         this.container = document.getElementById('projects-container');
         this.apiUrl = 'http://localhost:5000/api/projects';
     }
@@ -96,8 +96,8 @@ class Projects {
 
         try {
             console.log('Projecten ophalen van:', this.apiUrl);
-            const response = await fetch(this.apiUrl);
-            const projects = await response.json();
+            let response = await fetch(this.apiUrl);
+            let projects = await response.json();
             console.log('Projecten geladen:', projects.length);
             this.renderProjects(projects);
         } catch (error) {
@@ -114,7 +114,7 @@ class Projects {
 
         this.container.innerHTML = '';
         projects.forEach(project => {
-            const card = document.createElement('div');
+            let card = document.createElement('div');
             card.className = 'project-card';
             card.innerHTML = `
                 <div class="project-image">
@@ -135,7 +135,7 @@ class Projects {
 
 // ========== CONTACT FORM ==========
 class ContactForm {
-    constructor() {
+    letructor() {
         this.form = document.getElementById('contact-form');
         this.messageDiv = document.getElementById('form-message');
         if (this.form) {
@@ -146,27 +146,27 @@ class ContactForm {
     async handleSubmit(e) {
         e.preventDefault();
 
-        const naam = document.getElementById('naam').value;
-        const email = document.getElementById('email').value;
-        const bericht = document.getElementById('bericht').value;
+        let naam = document.getElementById('naam').value;
+        let email = document.getElementById('email').value;
+        let bericht = document.getElementById('bericht').value;
 
         if (!naam || !email || !bericht) {
             this.showMessage('Vul alle velden in!', 'error');
             return;
         }
 
-        const submitBtn = this.form.querySelector('.btn-submit');
+        let submitBtn = this.form.querySelector('.btn-submit');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Verzenden...';
 
         try {
-            const response = await fetch('http://localhost:5000/api/contact', {
+            let response = await fetch('http://localhost:5000/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ naam, email, bericht })
             });
 
-            const data = await response.json();
+            let data = await response.json();
 
             if (data.success) {
                 this.showMessage('Bericht succesvol verzonden!', 'success');
@@ -197,10 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM geladen - start portfolio');
     new MobileMenu();
 
-    const skills = new Skills();
+    let skills = new Skills();
     skills.loadSkills();
 
-    const projects = new Projects();
+    let projects = new Projects();
     projects.loadProjects();
 
     new ContactForm();
@@ -209,8 +209,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.nav-link').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
+            let targetId = this.getAttribute('href');
+            let targetElement = document.querySelector(targetId);
 
             if (targetElement) {
                 targetElement.scrollIntoView({
