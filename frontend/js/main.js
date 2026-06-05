@@ -1,6 +1,6 @@
 // ========== MOBILE MENU ==========
 class MobileMenu {
-    letructor() {
+    constructor() {
         this.hamburger = document.querySelector(".hamburger");
         this.navMenu = document.querySelector(".nav-menu");
         this.navLinks = document.querySelectorAll(".nav-link");
@@ -26,27 +26,30 @@ class MobileMenu {
 
 // ========== SKILLS ==========
 class Skills {
-    letructor() {
+    constructor() {
         this.container = document.getElementById('skills-container');
-        // DIRECTE BACKEND URL - NIET via proxy
         this.apiUrl = 'http://localhost:5000/api/skills';
     }
 
     async loadSkills() {
+        if (!this.container) {
+            console.error('Skills container niet gevonden');
+            return;
+        }
+
         try {
-            console.log('Ophalen van:', this.apiUrl);
-            let response = await fetch(this.apiUrl);
-            let skills = await response.json();
+            console.log('Skills ophalen van:', this.apiUrl);
+            const response = await fetch(this.apiUrl);
+            const skills = await response.json();
             console.log('Skills geladen:', skills.length);
             this.renderSkills(skills);
         } catch (error) {
             console.error('Fout:', error);
-            this.container.innerHTML = '<div class="loading"><p> Kan backend niet bereiken op poort 5000</p></div>';
+            this.container.innerHTML = '<div class="loading"><p>❌ Kan backend niet bereiken</p></div>';
         }
     }
 
     renderSkills(skills) {
-        if (!this.container) return;
         if (!skills || skills.length === 0) {
             this.container.innerHTML = '<div class="loading"><p>Geen skills gevonden</p></div>';
             return;
@@ -54,7 +57,7 @@ class Skills {
 
         this.container.innerHTML = '';
         skills.forEach(skill => {
-            let card = document.createElement('div');
+            const card = document.createElement('div');
             card.className = 'skill-card';
             card.innerHTML = `
                 <div class="skill-header">
@@ -80,27 +83,30 @@ class Skills {
 
 // ========== PROJECTEN ==========
 class Projects {
-    letructor() {
+    constructor() {
         this.container = document.getElementById('projects-container');
-        // DIRECTE BACKEND URL - NIET via proxy
         this.apiUrl = 'http://localhost:5000/api/projects';
     }
 
     async loadProjects() {
+        if (!this.container) {
+            console.error('Projects container niet gevonden');
+            return;
+        }
+
         try {
-            console.log('Ophalen van:', this.apiUrl);
-            let response = await fetch(this.apiUrl);
-            let projects = await response.json();
+            console.log('Projecten ophalen van:', this.apiUrl);
+            const response = await fetch(this.apiUrl);
+            const projects = await response.json();
             console.log('Projecten geladen:', projects.length);
             this.renderProjects(projects);
         } catch (error) {
             console.error('Fout:', error);
-            this.container.innerHTML = '<div class="loading"><p> Kan backend niet bereiken op poort 5000</p></div>';
+            this.container.innerHTML = '<div class="loading"><p>❌ Kan backend niet bereiken</p></div>';
         }
     }
 
     renderProjects(projects) {
-        if (!this.container) return;
         if (!projects || projects.length === 0) {
             this.container.innerHTML = '<div class="loading"><p>Geen projecten gevonden</p></div>';
             return;
@@ -108,11 +114,11 @@ class Projects {
 
         this.container.innerHTML = '';
         projects.forEach(project => {
-            let card = document.createElement('div');
+            const card = document.createElement('div');
             card.className = 'project-card';
             card.innerHTML = `
                 <div class="project-image">
-                    <div class="project-image-placeholder"></div>
+                    <div class="project-image-placeholder">📁</div>
                 </div>
                 <div class="project-info">
                     <h3 class="project-title">${project.titel}</h3>
@@ -129,7 +135,7 @@ class Projects {
 
 // ========== CONTACT FORM ==========
 class ContactForm {
-    letructor() {
+    constructor() {
         this.form = document.getElementById('contact-form');
         this.messageDiv = document.getElementById('form-message');
         if (this.form) {
@@ -140,27 +146,27 @@ class ContactForm {
     async handleSubmit(e) {
         e.preventDefault();
 
-        let naam = document.getElementById('naam').value;
-        let email = document.getElementById('email').value;
-        let bericht = document.getElementById('bericht').value;
+        const naam = document.getElementById('naam').value;
+        const email = document.getElementById('email').value;
+        const bericht = document.getElementById('bericht').value;
 
         if (!naam || !email || !bericht) {
             this.showMessage('Vul alle velden in!', 'error');
             return;
         }
 
-        let submitBtn = this.form.querySelector('.btn-submit');
+        const submitBtn = this.form.querySelector('.btn-submit');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Verzenden...';
 
         try {
-            let response = await fetch('http://localhost:5000/api/contact', {
+            const response = await fetch('http://localhost:5000/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ naam, email, bericht })
             });
 
-            let data = await response.json();
+            const data = await response.json();
 
             if (data.success) {
                 this.showMessage('Bericht succesvol verzonden!', 'success');
@@ -187,15 +193,31 @@ class ContactForm {
 }
 
 // ========== INITIALISATIE ==========
-window.addEventListener('DOMContentLoaded', async () => {
-    console.log('Website gestart');
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('DOM geladen - start portfolio');
     new MobileMenu();
 
-    let skills = new Skills();
-    await skills.loadSkills();
+    const skills = new Skills();
+    skills.loadSkills();
 
-    let projects = new Projects();
-    await projects.loadProjects();
+    const projects = new Projects();
+    projects.loadProjects();
 
     new ContactForm();
+
+    // ========== SMOOTH SCROLLING FIX ==========
+    document.querySelectorAll('.nav-link').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
 });

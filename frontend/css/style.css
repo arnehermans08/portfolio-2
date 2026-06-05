@@ -5,6 +5,16 @@
     box-sizing: border-box;
 }
 
+/* ========== SMOOTH SCROLLING ========== */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Optioneel: extra offset voor fixed navbar */
+html {
+    scroll-padding-top: 80px;
+}
+
 body {
     background-color: #000000;
     color: #ffffff;
