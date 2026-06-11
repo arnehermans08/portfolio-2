@@ -1,7 +1,7 @@
 
 
 
-docker exec - it portfolio_db mongosh
+docker exec -it portfolio_db mongosh
 
 use portfolio
 
