@@ -26,7 +26,7 @@ class MobileMenu {
 
 // ========== SKILLS ==========
 class Skills {
-    letructor() {
+    constructor() {
         this.container = document.getElementById('skills-container');
         this.apiUrl = 'http://localhost:5000/api/skills';
     }
@@ -83,7 +83,7 @@ class Skills {
 
 // ========== PROJECTEN ==========
 class Projects {
-    letructor() {
+    constructor() {
         this.container = document.getElementById('projects-container');
         this.apiUrl = 'http://localhost:5000/api/projects';
     }
@@ -135,7 +135,7 @@ class Projects {
 
 // ========== CONTACT FORM ==========
 class ContactForm {
-    letructor() {
+    constructor() {
         this.form = document.getElementById('contact-form');
         this.messageDiv = document.getElementById('form-message');
         if (this.form) {
